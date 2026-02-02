@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetGit | Smart GitHub Downloader</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/monaspace-neon@5.0.0/index.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Space Grotesk"', 'sans-serif'],
+                        mono: ['"Monaspace Neon"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center relative bg-gradient-to-br from-gray-50 to-gray-200 dark:from-[#0d1117] dark:to-[#161b22] text-gray-900 dark:text-[#e6edf3] transition-all duration-500">
+
+    <button onclick="toggleTheme()" class="theme-toggle">
+        <svg id="sunIcon" class="w-6 h-6 hidden dark:block text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        <svg id="moonIcon" class="w-6 h-6 block dark:hidden text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+    </button>
+
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="hero-section">
+            <div class="logo-wrapper">
+                <svg class="github-logo" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M512 0C229.25 0 0 229.25 0 512c0 226.25 146.69 418.13 350.15 485.81 25.59 4.69 34.93-11.12 34.93-24.63 0-12.18-0.46-52.54-0.7-103.07-142.42 30.95-172.45-68.61-172.45-68.61-23.28-59.13-56.88-74.87-56.88-74.87-46.51-31.75 3.53-31.12 3.53-31.12 51.4 3.63 78.47 52.75 78.47 52.75 45.68 78.25 119.88 55.63 149.09 42.5 4.65-33.08 17.9-55.68 32.5-68.51-113.6-12.94-233.28-56.86-233.28-253.05 0-55.94 19.97-101.56 52.66-137.41-5.22-13.05-22.85-65.12 5.06-135.56 0 0 43.09-13.75 141.25 52.66 40.94-11.34 84.88-17.03 128.56-17.22 43.66 0.19 87.63 5.88 128.66 17.22 98.06-66.56 141.09-52.66 141.09-52.66 28 70.63 10.38 122.69 5.13 135.56 32.78 35.81 52.66 81.44 52.66 137.41 0 196.65-119.78 240.03-233.53 252.69 18.44 15.88 34.91 47.25 34.91 95.16 0 68.69-0.63 124.06-0.63 140.94 0 13.63 9.38 29.56 35.09 24.56C877.44 930.06 1024 738.19 1024 512 1024 229.25 794.75 0 512 0z"/>
+                </svg>
+            </div>
+            <h1 class="main-title">GetGit</h1>
+            <p class="subtitle">Download GitHub directories instantly</p>
+        </div>
+
+        <div class="glass-panel">
+            <div class="input-section">
+                <label class="input-label">GitHub Folder URL</label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                    <input type="text" id="urlInput" placeholder="https://github.com/user/repo/tree/main/folder" class="url-input">
+                </div>
+            </div>
+
+            <button onclick="startDownload()" id="downloadBtn" class="download-btn">
+                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span>Download</span>
+            </button>
+
+            <div id="statusArea" class="status-area hidden">
+                <div class="terminal" id="logs"></div>
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+            </div>
+
+            <p class="security-badge">
+                <svg class="badge-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                Client-side processing • Zero data collection
+            </p>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Crafted with <span class="heart">♥</span> by <a href="https://github.com/SameerAlSahab" target="_blank" class="footer-link">Sameer Al Sahab</a></p>
+        </div>
+    </footer>
+
+    <script src="theme.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
