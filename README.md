@@ -1,8 +1,5 @@
-<p align="center">
-  <img src="readme-res/getgit.png" width="180" alt="GetGit Logo">
-</p>
 
-<h1 align="center">GetGit</h1>
+# GetGit
 The fastest, cleanest way to download specific GitHub sub-directories without cloning the whole repo.
 
 [![Stars](https://img.shields.io/github/stars/SameerAlSahab/GetGit?style=for-the-badge&color=yellow)](https://github.com/SameerAlSahab/GetGit)
@@ -12,6 +9,10 @@ The fastest, cleanest way to download specific GitHub sub-directories without cl
 - **Zero Server Overhead:** Everything is zipped in own browser. Your data never touches a middle server.
 - **Bypass Limits:** Uses the Git Tree API and Raw content fetching to maximize download speeds and minimize rate limits.
 - **Safe & Secure:** No tracking, no data collection. Just you and the GitHub API.
+
+<p align="center">
+  <a href="https://sameeralsahab.github.io/GetGit/">Click Here to Use</a>
+</p>
 
 <p align="center">
   <img src="readme-res/design.png" alt="GetGit Screenshot" width="90%">
